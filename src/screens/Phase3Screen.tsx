@@ -4,12 +4,14 @@ import { useNavigation } from '@react-navigation/native';
 import { PHASE3_ITEMS_MOTHER, PHASE3_ITEMS_BABY, PHASE3_ITEMS_DISCHARGE, NEWBORN_BASICS, MOTHER_RECOVERY, DISCHARGE_CHECKLIST } from '../data/phase3';
 import { PhaseReminderBanner, Checkbox, InfoCard } from '../components/SharedComponents';
 import { useChecklist } from '../hooks/useChecklist';
-
-const TABS = ['New Items', 'Baby Care', 'Recovery', 'Discharge'];
+import { useTranslation } from 'react-i18next';
 
 export default function Phase3Screen() {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState(0);
+
+  const TABS = t('phase3.tabs', { returnObjects: true }) as string[];
 
   const renderContent = () => {
     switch (activeTab) {
@@ -27,8 +29,8 @@ export default function Phase3Screen() {
         <TouchableOpacity onPress={() => navigation.goBack()} className="mb-3 w-10 h-10 -ml-2 items-center justify-center">
           <Text className="text-[28px] text-textPrimary leading-8">←</Text>
         </TouchableOpacity>
-        <Text className="text-[24px] font-bold text-textPrimary tracking-[-0.5px] mb-1">Post-Delivery</Text>
-        <Text className="text-[12px] text-textSecondary leading-5">You did it! Here is everything you need while recovering in the hospital.</Text>
+        <Text className="text-[24px] font-bold text-textPrimary tracking-[-0.5px] mb-1">{t('phase3.title')}</Text>
+        <Text className="text-[12px] text-textSecondary leading-5">{t('phase3.desc')}</Text>
       </View>
       <PhaseReminderBanner />
       
@@ -62,6 +64,7 @@ export default function Phase3Screen() {
 // SUB-SECTION 1: NEW ITEMS
 // -------------------------------------------------------------
 const NewItemsTab = () => {
+  const { t, i18n } = useTranslation();
   const [checked, toggle] = useChecklist('p3_items_checked');
 
   const renderSection = (title: string, data: any[]) => (
@@ -72,8 +75,8 @@ const NewItemsTab = () => {
       return (
         <InfoCard
           key={item.id}
-          title={item.name}
-          detail={item.why}
+          title={i18n.language === 'ne' ? item.nameNe : item.name}
+          detail={i18n.language === 'ne' ? item.whyNe : item.why}
           checked={isChecked}
           onCheck={() => toggle(item.id)}
           borderColor="#2F9E72"
@@ -96,10 +99,11 @@ const NewItemsTab = () => {
 // SUB-SECTION 2: NEWBORN BASICS
 // -------------------------------------------------------------
 const BabyBasicsTab = () => {
+  const { i18n } = useTranslation();
   return (
     <ScrollView className="flex-1 pt-4" contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
       {NEWBORN_BASICS.map((item, idx) => (
-        <InfoCard key={idx} title={item.title} detail={item.detail} borderColor="#1C6B9E" bgColor="#EAF3FA" />
+        <InfoCard key={idx} title={i18n.language === 'ne' ? item.titleNe : item.title} detail={i18n.language === 'ne' ? item.detailNe : item.detail} borderColor="#1C6B9E" bgColor="#EAF3FA" />
       ))}
     </ScrollView>
   );
@@ -109,10 +113,11 @@ const BabyBasicsTab = () => {
 // SUB-SECTION 3: MOTHER RECOVERY
 // -------------------------------------------------------------
 const MotherRecoveryTab = () => {
+  const { i18n } = useTranslation();
   return (
     <ScrollView className="flex-1 pt-4" contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
       {MOTHER_RECOVERY.map((item, idx) => (
-        <InfoCard key={idx} title={item.title} detail={item.detail} borderColor="#F77F6E" bgColor="#FFF5F0" />
+        <InfoCard key={idx} title={i18n.language === 'ne' ? item.titleNe : item.title} detail={i18n.language === 'ne' ? item.detailNe : item.detail} borderColor="#F77F6E" bgColor="#FFF5F0" />
       ))}
     </ScrollView>
   );
@@ -122,11 +127,12 @@ const MotherRecoveryTab = () => {
 // SUB-SECTION 4: DISCHARGE CHECKLIST
 // -------------------------------------------------------------
 const DischargeTab = () => {
+  const { t, i18n } = useTranslation();
   const [checked, toggle] = useChecklist('p3_discharge_checked');
   
   return (
     <ScrollView className="flex-1 pt-4" contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
-      <Text className="text-[14px] font-bold text-textSecondary uppercase tracking-[1px] px-4 mb-4 mt-2">Have you done these?</Text>
+      <Text className="text-[14px] font-bold text-textSecondary uppercase tracking-[1px] px-4 mb-4 mt-2">{t('phase3.done_these')}</Text>
       {DISCHARGE_CHECKLIST.map((item, idx) => {
         const isChecked = checked.has(item.id);
         return (
@@ -137,7 +143,7 @@ const DischargeTab = () => {
             activeOpacity={0.7}
           >
             <Checkbox checked={isChecked} onToggle={() => toggle(item.id)} />
-            <Text className={`text-[15px] flex-1 ml-3 leading-6 ${isChecked ? 'text-textMuted' : 'text-textPrimary font-semibold'}`}>{item.name}</Text>
+            <Text className={`text-[15px] flex-1 ml-3 leading-6 ${isChecked ? 'text-textMuted' : 'text-textPrimary font-semibold'}`}>{i18n.language === 'ne' ? item.nameNe : item.name}</Text>
           </TouchableOpacity>
         );
       })}

@@ -4,12 +4,14 @@ import { useNavigation } from '@react-navigation/native';
 import { PHASE2_ITEMS, DECISION_TREE, RESULTS, RIDE_GUIDE, BREATHING_GUIDE } from '../data/phase2';
 import { PhaseReminderBanner, Checkbox, InfoCard, ShareButton, SegmentedControl } from '../components/SharedComponents';
 import { useChecklist } from '../hooks/useChecklist';
-
-const TABS = ['New Items', 'Decision Tree', 'Ride Guide', 'Breathing'];
+import { useTranslation } from 'react-i18next';
 
 export default function Phase2Screen() {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState(0);
+
+  const TABS = t('phase2.tabs', { returnObjects: true }) as string[];
 
   const renderContent = () => {
     switch (activeTab) {
@@ -27,8 +29,8 @@ export default function Phase2Screen() {
         <TouchableOpacity onPress={() => navigation.goBack()} className="mb-3 w-10 h-10 -ml-2 items-center justify-center">
           <Text className="text-[28px] text-textPrimary leading-8">←</Text>
         </TouchableOpacity>
-        <Text className="text-[24px] font-bold text-textPrimary tracking-[-0.5px] mb-1">Labour has started</Text>
-        <Text className="text-[12px] text-textSecondary leading-5">Only 3 new items needed. Everything else is in your Phase 1 bag.</Text>
+        <Text className="text-[24px] font-bold text-textPrimary tracking-[-0.5px] mb-1">{t('phase2.title')}</Text>
+        <Text className="text-[12px] text-textSecondary leading-5">{t('phase2.desc')}</Text>
       </View>
       <PhaseReminderBanner />
       
@@ -62,14 +64,15 @@ export default function Phase2Screen() {
 // SUB-SECTION 1: NEW ITEMS
 // -------------------------------------------------------------
 const NewItemsTab = () => {
+  const { t, i18n } = useTranslation();
   const [checked, toggle] = useChecklist('p2_checked');
   const checkedCount = PHASE2_ITEMS.filter(i => checked.has(i.id)).length;
   
   return (
     <ScrollView className="flex-1 pt-4" contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
       <View className="px-4 mb-3 flex-row justify-between items-center">
-        <Text className="text-[14px] font-bold text-textSecondary uppercase tracking-[1px]">Phase 2 Items</Text>
-        <Text className="text-[14px] font-bold text-[#E05C44]">{checkedCount} / 3 ready</Text>
+        <Text className="text-[14px] font-bold text-textSecondary uppercase tracking-[1px]">{t('phase2.new_items_subtitle')}</Text>
+        <Text className="text-[14px] font-bold text-[#E05C44]">{t('phase2.ready_count', { count: checkedCount })}</Text>
       </View>
 
       {PHASE2_ITEMS.map((item) => {
@@ -77,8 +80,8 @@ const NewItemsTab = () => {
         return (
           <InfoCard
             key={item.id}
-            title={item.name}
-            detail={item.why}
+            title={i18n.language === 'ne' ? item.nameNe : item.name}
+            detail={i18n.language === 'ne' ? item.whyNe : item.why}
             checked={isChecked}
             onCheck={() => toggle(item.id)}
             borderColor="#E05C44"
@@ -93,6 +96,7 @@ const NewItemsTab = () => {
 // SUB-SECTION 2: DECISION TREE
 // -------------------------------------------------------------
 const DecisionTreeTab = () => {
+  const { t, i18n } = useTranslation();
   const [currentNode, setCurrentNode] = useState<string>('Q1');
   const [resultId, setResultId] = useState<string | null>(null);
 
@@ -121,12 +125,12 @@ const DecisionTreeTab = () => {
       <ScrollView className="flex-1 p-5" showsVerticalScrollIndicator={false}>
         <View className={`px-4 py-2 rounded-full self-start mb-4 border-[1px]`} style={{ backgroundColor: res.type === 'red' ? '#FCEDED' : res.type === 'amber' ? '#FBF2E1' : '#EBF5ED', borderColor: res.type === 'red' ? '#DE8E94' : res.type === 'amber' ? '#D69E58' : '#6EB88B' }}>
           <Text className={`text-[12px] font-black tracking-[1px]`} style={{ color: res.type === 'red' ? '#A73C44' : res.type === 'amber' ? '#9A5A17' : '#2B6D45' }}>
-            {res.title}
+            {i18n.language === 'ne' ? res.titleNe : res.title}
           </Text>
         </View>
 
-        <Text className="text-[16px] font-bold text-textPrimary mb-3">What to do right now:</Text>
-        {res.points.map((pt: string, i: number) => (
+        <Text className="text-[16px] font-bold text-textPrimary mb-3">{t('phase2.what_to_do')}</Text>
+        {(i18n.language === 'ne' ? res.pointsNe : res.points).map((pt: string, i: number) => (
           <View key={i} className="flex-row items-start mb-2.5">
             <Text className="text-[18px] mr-2 -mt-1" style={{ color: res.type === 'red' ? '#A73C44' : res.type === 'amber' ? '#9A5A17' : '#2B6D45' }}>•</Text>
             <Text className="text-[15px] text-textSecondary leading-6 flex-1">{pt}</Text>
@@ -135,14 +139,14 @@ const DecisionTreeTab = () => {
 
         <View className="mt-5 bg-themeWhite border-[1px] border-[#EAE2E3] rounded-xl p-4 shadow-sm relative">
           <View className="flex-row justify-between items-center mb-2">
-            <Text className="text-[12px] font-bold text-[#1C6B9E] uppercase tracking-[0.5px]">What to say when calling</Text>
-            <ShareButton content={res.script} color="#1C6B9E" />
+            <Text className="text-[12px] font-bold text-[#1C6B9E] uppercase tracking-[0.5px]">{t('phase2.what_to_say')}</Text>
+            <ShareButton content={i18n.language === 'ne' ? res.scriptNe : res.script} color="#1C6B9E" />
           </View>
-          <Text className="text-[15px] font-medium leading-[22px] italic text-textPrimary">"{res.script}"</Text>
+          <Text className="text-[15px] font-medium leading-[22px] italic text-textPrimary">"{i18n.language === 'ne' ? res.scriptNe : res.script}"</Text>
         </View>
 
         <TouchableOpacity onPress={startOver} className="mt-8 py-3.5 bg-themeWhite border-[1px] border-themeBorder rounded-xl items-center mb-6">
-          <Text className="text-[14px] font-bold text-textPrimary">Restart Assessment</Text>
+          <Text className="text-[14px] font-bold text-textPrimary">{t('phase2.restart')}</Text>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -153,7 +157,7 @@ const DecisionTreeTab = () => {
   return (
     <View className="flex-1 p-5 justify-center">
       <View className="bg-themeWhite border-[1px] border-themeBorder rounded-2xl p-5 shadow-sm">
-        <Text className="text-[20px] font-bold text-textPrimary text-center mb-6">{qData.question}</Text>
+        <Text className="text-[20px] font-bold text-textPrimary text-center mb-6">{i18n.language === 'ne' ? qData.questionNe : qData.question}</Text>
         {qData.options.map((opt: any, i: number) => {
           let bg = '#FEF7F9';
           let border = '#EAE2E3';
@@ -170,14 +174,14 @@ const DecisionTreeTab = () => {
               className="py-3.5 px-4 rounded-xl border-[1px] mb-3 items-center justify-center"
               style={{ backgroundColor: bg, borderColor: border }}
             >
-              <Text className="text-[15px] font-bold text-center" style={{ color: text }}>{opt.text}</Text>
+              <Text className="text-[15px] font-bold text-center" style={{ color: text }}>{i18n.language === 'ne' ? opt.textNe : opt.text}</Text>
             </TouchableOpacity>
           );
         })}
       </View>
       {currentNode !== 'Q1' && (
         <TouchableOpacity onPress={startOver} className="mt-6 items-center">
-          <Text className="text-[14px] font-bold text-textMuted">Start over</Text>
+          <Text className="text-[14px] font-bold text-textMuted">{t('phase2.start_over')}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -188,6 +192,7 @@ const DecisionTreeTab = () => {
 // SUB-SECTION 3: RIDE GUIDE
 // -------------------------------------------------------------
 const RideGuideTab = () => {
+  const { i18n } = useTranslation();
   return (
     <ScrollView className="flex-1 pt-4" contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
       {RIDE_GUIDE.map((step) => (
@@ -196,12 +201,12 @@ const RideGuideTab = () => {
             <View className="w-6 h-6 rounded-full bg-[#1C6B9E] items-center justify-center mr-2.5">
               <Text className="text-[12px] font-bold text-themeWhite">{step.step}</Text>
             </View>
-            <Text className="text-[16px] font-bold text-textPrimary flex-1">{step.title}</Text>
+            <Text className="text-[16px] font-bold text-textPrimary flex-1">{i18n.language === 'ne' ? step.titleNe : step.title}</Text>
             <View className="bg-[#EAF3FA] px-2 py-1 rounded-md">
-              <Text className="text-[10px] font-bold text-[#1C6B9E] uppercase">{step.who}</Text>
+              <Text className="text-[10px] font-bold text-[#1C6B9E] uppercase">{i18n.language === 'ne' ? step.whoNe : step.who}</Text>
             </View>
           </View>
-          <Text className="text-[14px] text-textSecondary leading-[21px] ml-[34px]">{step.desc}</Text>
+          <Text className="text-[14px] text-textSecondary leading-[21px] ml-[34px]">{i18n.language === 'ne' ? step.descNe : step.desc}</Text>
         </View>
       ))}
     </ScrollView>
@@ -222,6 +227,7 @@ const BreathingGuideTab = () => {
 };
 
 const BreathingCard = ({ data }: { data: any }) => {
+  const { t, i18n } = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
   const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
@@ -243,8 +249,8 @@ const BreathingCard = ({ data }: { data: any }) => {
 
   return (
     <View className="bg-themeWhite mx-4 mb-4 border-[0.5px] border-themeBorder rounded-xl p-5 shadow-sm items-center">
-      <Text className="text-[18px] font-bold text-textPrimary mb-1 text-center">{data.title}</Text>
-      <Text className="text-[12px] text-textMuted mb-6 text-center">{data.when}</Text>
+      <Text className="text-[18px] font-bold text-textPrimary mb-1 text-center">{i18n.language === 'ne' ? data.titleNe : data.title}</Text>
+      <Text className="text-[12px] text-textMuted mb-6 text-center">{i18n.language === 'ne' ? data.whenNe : data.when}</Text>
       
       <View className="w-32 h-32 items-center justify-center mb-6 relative">
         <View className="absolute w-[180px] h-[180px] rounded-full border-[1px] border-[#FDF2F4] items-center justify-center" />
@@ -255,20 +261,20 @@ const BreathingCard = ({ data }: { data: any }) => {
       </View>
 
       <Text className="text-[14px] font-medium text-textSecondary italic text-center mb-5 px-2">
-        "{data.cue}"
+        "{i18n.language === 'ne' ? data.cueNe : data.cue}"
       </Text>
 
       <View className="flex-row justify-center space-x-4 w-full mb-5">
         <View className="items-center">
-          <Text className="text-[11px] font-bold text-[#1C6B9E] uppercase">Inhale</Text>
+          <Text className="text-[11px] font-bold text-[#1C6B9E] uppercase">{t('phase2.inhale')}</Text>
           <Text className="text-[15px] font-bold text-textPrimary">{data.inhale}s</Text>
         </View>
         <View className="items-center mx-4">
-          <Text className="text-[11px] font-bold text-[#D69E58] uppercase">Hold</Text>
+          <Text className="text-[11px] font-bold text-[#D69E58] uppercase">{t('phase2.hold')}</Text>
           <Text className="text-[15px] font-bold text-textPrimary">{data.hold}s</Text>
         </View>
         <View className="items-center">
-          <Text className="text-[11px] font-bold text-[#6EB88B] uppercase">Exhale</Text>
+          <Text className="text-[11px] font-bold text-[#6EB88B] uppercase">{t('phase2.exhale')}</Text>
           <Text className="text-[15px] font-bold text-textPrimary">{data.exhale}s</Text>
         </View>
       </View>
@@ -279,7 +285,7 @@ const BreathingCard = ({ data }: { data: any }) => {
         style={{ backgroundColor: isPlaying ? '#FCEDED' : '#F48B9E', borderWidth: isPlaying ? 1 : 0, borderColor: '#DE8E94' }}
       >
         <Text className={`text-[15px] font-bold ${isPlaying ? 'text-[#A73C44]' : 'text-themeWhite'}`}>
-          {isPlaying ? '■ Stop' : '▶ Start Breathing'}
+          {isPlaying ? t('phase2.stop') : t('phase2.start_breathing')}
         </Text>
       </TouchableOpacity>
     </View>

@@ -13,6 +13,7 @@ import {
   BAG_ITEMS,
   DO_NOT_PACK_ITEMS,
   CATEGORY_COLORS,
+  CATEGORY_NAMES_NE,
   BagCategory,
   BagItem,
 } from '../data/bagItems';
@@ -22,6 +23,7 @@ import {
   ResetButton,
 } from '../components/SharedComponents';
 import { useChecklist } from '../hooks/useChecklist';
+import { useTranslation } from 'react-i18next';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -30,6 +32,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 const CATEGORIES: BagCategory[] = ['Clothing', 'Hygiene', 'Comfort', 'Baby'];
 
 export default function HospitalBagScreen({ isEmbedded }: { isEmbedded?: boolean }) {
+  const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState(0);
   const [checked, toggle, resetAll] = useChecklist('bag_checked');
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -80,7 +83,9 @@ export default function HospitalBagScreen({ isEmbedded }: { isEmbedded?: boolean
             <View key={cat}>
               <View className="flex-row items-center bg-themeBg px-4 py-3 border-b-[0.5px] border-themeBorder">
                 <View className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: colors.text }} />
-                <Text className="text-[16px] font-bold text-textPrimary flex-1">{cat}</Text>
+                <Text className="text-[16px] font-bold text-textPrimary flex-1">
+                  {i18n.language === 'ne' ? CATEGORY_NAMES_NE[cat] : cat}
+                </Text>
                 <Text className="text-[12px] font-medium text-textMuted">
                   {items.filter((i) => checked.has(i.id)).length}/{items.length}
                 </Text>
@@ -112,9 +117,9 @@ export default function HospitalBagScreen({ isEmbedded }: { isEmbedded?: boolean
       >
         <View className="items-center py-5 px-4">
           <Text className="text-[36px] mb-2">🚫</Text>
-          <Text className="text-[18px] font-bold text-redText mb-1">Items to Avoid</Text>
+          <Text className="text-[18px] font-bold text-redText mb-1">{t('phase1.bag.items_to_avoid')}</Text>
           <Text className="text-[12px] text-textMuted text-center">
-            These items may seem useful but can cause harm
+            {t('phase1.bag.do_not_pack_desc')}
           </Text>
         </View>
         {DO_NOT_PACK_ITEMS.map((item) => (
@@ -126,17 +131,21 @@ export default function HospitalBagScreen({ isEmbedded }: { isEmbedded?: boolean
           >
             <View className="flex-row items-center p-3.5">
               <View className="flex-1">
-                <Text className="text-[14px] font-bold text-redText mb-1.5 leading-5">{item.name}</Text>
+                <Text className="text-[14px] font-bold text-redText mb-1.5 leading-5">
+                  {i18n.language === 'ne' ? item.nameNe : item.name}
+                </Text>
                 <View className="bg-redBg px-2 py-[3px] rounded-full self-start">
-                  <Text className="text-[11px] font-semibold text-redText">✕ Do not pack</Text>
+                  <Text className="text-[11px] font-semibold text-redText">{t('phase1.bag.do_not_pack')}</Text>
                 </View>
               </View>
               <Text className="text-[16px] text-textMuted ml-1">{expandedDoNot === item.id ? '▲' : '▼'}</Text>
             </View>
             {expandedDoNot === item.id && (
               <View className="bg-[#FCEDED] px-3.5 py-3 border-t-[0.5px] border-t-[#DE8E94]">
-                <Text className="text-[12px] font-bold text-redText mb-1 uppercase tracking-[0.5px]">Why not?</Text>
-                <Text className="text-[14px] leading-[21px] text-[#A73C44]">{item.whyNot}</Text>
+                <Text className="text-[12px] font-bold text-redText mb-1 uppercase tracking-[0.5px]">{t('phase1.bag.why_not')}</Text>
+                <Text className="text-[14px] leading-[21px] text-[#A73C44]">
+                  {i18n.language === 'ne' ? item.whyNotNe : item.whyNot}
+                </Text>
               </View>
             )}
           </TouchableOpacity>
@@ -151,7 +160,7 @@ export default function HospitalBagScreen({ isEmbedded }: { isEmbedded?: boolean
       <View className="bg-themeWhite border-b-[0.5px] border-themeBorder pt-2">
         {!isEmbedded && (
           <View className="flex-row justify-between items-center px-4 mb-1 mt-12">
-            <Text className="text-[22px] font-bold text-textPrimary tracking-[-0.3px]">Hospital Bag</Text>
+            <Text className="text-[22px] font-bold text-textPrimary tracking-[-0.3px]">{t('phase1.bag.title')}</Text>
             {activeTab === 0 && <ResetButton onPress={handleReset} />}
           </View>
         )}
@@ -164,7 +173,7 @@ export default function HospitalBagScreen({ isEmbedded }: { isEmbedded?: boolean
           <View className="px-4 mb-1">
             <View className="flex-row justify-between items-center mb-1.5">
               <Text className="text-[12px] text-textSecondary font-medium">
-                {checkedCount} of {totalItems} items packed
+                {t('phase1.bag.packed_count', { count: checkedCount, total: totalItems })}
               </Text>
               <Text className="text-[12px] font-bold text-themePrimary">
                 {totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0}%
@@ -178,15 +187,15 @@ export default function HospitalBagScreen({ isEmbedded }: { isEmbedded?: boolean
             </View>
             {checkedCount === totalItems && totalItems > 0 && (
               <View className="mt-3 bg-greenBg border-[1px] border-greenBorder py-3 px-4 rounded-xl items-center">
-                <Text className="text-[14px] text-greenText font-bold">✓ All packed! You are ready.</Text>
+                <Text className="text-[14px] text-greenText font-bold">{t('phase1.bag.all_packed')}</Text>
               </View>
             )}
           </View>
         )}
         <SegmentedControl
-          tabs={['Pack These', 'Do NOT Pack']}
+          tabs={t('phase1.bag.pack_tabs', { returnObjects: true }) as string[]}
           activeIndex={activeTab}
-          onTabPress={(i) => {
+          onTabPress={(i: number) => {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             setActiveTab(i);
           }}
@@ -208,6 +217,7 @@ interface PackItemCardProps {
 
 const PackItemCard: React.FC<PackItemCardProps> = React.memo(
   ({ item, isChecked, isExpanded, onCheck, onExpand }) => {
+    const { t, i18n } = useTranslation();
     const colors = CATEGORY_COLORS[item.category];
     return (
       <View
@@ -227,7 +237,7 @@ const PackItemCard: React.FC<PackItemCardProps> = React.memo(
                 isChecked ? 'text-textMuted' : 'text-textPrimary'
               }`}
             >
-              {item.name}
+              {i18n.language === 'ne' ? item.nameNe : item.name}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={onExpand} className="p-2 ml-1">
@@ -236,8 +246,10 @@ const PackItemCard: React.FC<PackItemCardProps> = React.memo(
         </View>
         {isExpanded && (
           <View className="bg-[#EBF5ED] px-3.5 py-3 border-t-[0.5px] border-t-themeBorder">
-            <Text className="text-[12px] font-bold text-greenText mb-1 uppercase tracking-[0.5px]">Why bring this?</Text>
-            <Text className="text-[14px] text-textSecondary leading-[21px]">{item.why}</Text>
+            <Text className="text-[12px] font-bold text-greenText mb-1 uppercase tracking-[0.5px]">{t('phase1.bag.why_bring')}</Text>
+            <Text className="text-[14px] text-textSecondary leading-[21px]">
+              {i18n.language === 'ne' ? item.whyNe : item.why}
+            </Text>
           </View>
         )}
       </View>

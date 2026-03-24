@@ -1,0 +1,122 @@
+{
+  "home": {
+    "title": "Aama Ready",
+    "subtitle": "Your pregnancy preparation guide",
+    "phase1_title": "Hospital Bag & Prep",
+    "phase1_desc": "Pack your bags and save important contacts",
+    "phase1_progress": "{{progress}}% completed",
+    "phase1_complete": "Hospital bag ready. You are prepared.",
+    "phase2_title": "Labour has started",
+    "phase2_desc": "Decision tree, breathing guide, ride to hospital",
+    "phase2_progress": "Wait until time comes",
+    "phase2_complete": "You made it to the hospital. Well done.",
+    "phase3_title": "Post-Delivery",
+    "phase3_desc": "Recovery in the hospital and baby basics",
+    "phase3_progress": "Review while resting",
+    "phase3_complete": "Ready to go home with your baby.",
+    "phase4_title": "Home Care",
+    "phase4_desc": "Mother's routine, baby tracker, warning signs",
+    "phase4_progress": "Your essential guide at home",
+    "phase4_complete": "You are doing an incredible job.",
+    "locked_msg": "🔒 Complete Phase 1 first",
+    "phase": "PHASE"
+  },
+  "phase1": {
+    "tabs": [
+      "Hospital Bag",
+      "Documents",
+      "Danger Signs",
+      "Contacts"
+    ],
+    "title": "Preparation Phase",
+    "desc": "Everything you need ready before labour begins.",
+    "bag": {
+      "title": "Hospital Bag",
+      "pack_tabs": [
+        "Pack These",
+        "Do NOT Pack"
+      ],
+      "packed_count": "{{count}} of {{total}} items packed",
+      "all_packed": "✓ All packed! You are ready.",
+      "why_bring": "Why bring this?",
+      "items_to_avoid": "Items to Avoid",
+      "do_not_pack_desc": "These items may seem useful but can cause harm",
+      "do_not_pack": "✕ Do not pack",
+      "why_not": "Why not?"
+    },
+    "danger_signs_title": "Danger Signs",
+    "danger_signs_desc": "Know when to act — every minute matters",
+    "signs": "signs",
+    "documents_title": "Documents",
+    "documents_ready": "documents ready",
+    "all_docs_ready": "✓ All documents ready!",
+    "why_needed": "Why needed?",
+    "contacts_title": "Contacts",
+    "contacts_saved": "contacts saved",
+    "all_contacts_saved": "✓ All contacts saved!",
+    "call": "Call"
+  },
+  "phase2": {
+    "tabs": [
+      "New Items",
+      "Decision Tree",
+      "Ride Guide",
+      "Breathing"
+    ],
+    "title": "Labour has started",
+    "desc": "Only 3 new items needed. Everything else is in your Phase 1 bag.",
+    "new_items_subtitle": "Phase 2 Items",
+    "ready_count": "{{count}} / 3 ready",
+    "what_to_do": "What to do right now:",
+    "what_to_say": "What to say when calling",
+    "restart": "Restart Assessment",
+    "start_over": "Start over",
+    "start_breathing": "▶ Start Breathing",
+    "stop": "■ Stop",
+    "inhale": "Inhale",
+    "hold": "Hold",
+    "exhale": "Exhale"
+  },
+  "phase3": {
+    "tabs": [
+      "New Items",
+      "Baby Care",
+      "Recovery",
+      "Discharge"
+    ],
+    "title": "Post-Delivery",
+    "desc": "You did it! Here is everything you need while recovering in the hospital.",
+    "done_these": "Have you done these?"
+  },
+  "phase4": {
+    "tabs": [
+      "New Items",
+      "Routine",
+      "Hygiene",
+      "Warnings",
+      "Tracker"
+    ],
+    "title": "Home Care",
+    "desc": "20 new items to have ready at home before you arrive.",
+    "baby_warning": "Baby Warning Signs",
+    "mother_warning": "Mother Warning Signs",
+    "feeding_log": "Feeding Log",
+    "sleep_log": "Sleep Log",
+    "reset": "Reset",
+    "duration_mins": "Duration (mins)",
+    "left": "Left",
+    "right": "Right",
+    "bottle": "Bottle",
+    "log_feed": "➕ Log a feed",
+    "last_feed": "Last feed:",
+    "ago": "ago",
+    "mins": "mins",
+    "min": "min",
+    "baby_sleeping": "Baby Sleeping",
+    "baby_awake": "Baby Awake",
+    "mother_sleeping": "Mother Sleeping",
+    "mother_awake": "Mother Awake",
+    "tap_to_wake": "Tap to wake",
+    "tap_to_sleep": "Tap to sleep"
+  }
+}

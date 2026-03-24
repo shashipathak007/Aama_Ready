@@ -10,6 +10,7 @@ import {
   Alert,
   Linking,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { CONTACTS, URGENCY_COLORS } from '../data/contacts';
 import { Checkbox, ResetButton } from '../components/SharedComponents';
 import { useChecklist } from '../hooks/useChecklist';
@@ -19,6 +20,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 }
 
 export default function ContactsScreen({ isEmbedded }: { isEmbedded?: boolean }) {
+  const { t, i18n } = useTranslation();
   const [checked, toggle, resetAll] = useChecklist('contacts_checked');
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
@@ -58,7 +60,7 @@ export default function ContactsScreen({ isEmbedded }: { isEmbedded?: boolean })
       <View className="bg-themeWhite border-b-[0.5px] border-themeBorder pt-2 pb-[14px]">
         {!isEmbedded && (
           <View className="flex-row justify-between items-center px-4 mb-2 mt-12">
-            <Text className="text-[22px] font-bold text-textPrimary tracking-[-0.3px]">Contacts</Text>
+            <Text className="text-[22px] font-bold text-textPrimary tracking-[-0.3px]">{t('phase1.contacts_title')}</Text>
             <ResetButton onPress={handleReset} />
           </View>
         )}
@@ -70,7 +72,7 @@ export default function ContactsScreen({ isEmbedded }: { isEmbedded?: boolean })
         <View className="px-4">
           <View className="flex-row justify-between items-center mb-1.5">
             <Text className="text-[12px] text-textSecondary font-medium">
-              {checkedCount} of {totalContacts} contacts saved
+              {checkedCount} / {totalContacts} {t('phase1.contacts_saved')}
             </Text>
             <Text className="text-[12px] text-themePrimary font-bold">{pct}%</Text>
           </View>
@@ -79,7 +81,7 @@ export default function ContactsScreen({ isEmbedded }: { isEmbedded?: boolean })
           </View>
           {checkedCount === totalContacts && totalContacts > 0 && (
             <View className="mt-3 bg-greenBg border-[1px] border-greenBorder py-3 px-4 rounded-xl items-center">
-              <Text className="text-[14px] text-greenText font-bold">✓ All contacts saved!</Text>
+              <Text className="text-[14px] text-greenText font-bold">{t('phase1.all_contacts_saved')}</Text>
             </View>
           )}
         </View>
@@ -117,16 +119,16 @@ export default function ContactsScreen({ isEmbedded }: { isEmbedded?: boolean })
                 <View className="flex-1 ml-3 mr-2">
                   <View className="flex-row items-start justify-between mb-1">
                     <Text className="text-[14px] font-semibold text-textPrimary flex-1 leading-5 mr-2" numberOfLines={2}>
-                      {contact.name}
+                      {i18n.language === 'ne' ? contact.nameNe : contact.name}
                     </Text>
                     <View className="px-1.5 py-0.5 rounded-md" style={{ backgroundColor: urgencyColors.bg }}>
                       <Text className="text-[9px] font-bold tracking-[0.5px]" style={{ color: urgencyColors.text }}>
-                        {contact.urgency}
+                        {i18n.language === 'ne' ? urgencyColors.labelNe : contact.urgency}
                       </Text>
                     </View>
                   </View>
                   <Text className="text-[12px] text-textMuted leading-[18px] mb-1.5">
-                    {contact.shortDesc}
+                    {i18n.language === 'ne' ? contact.shortDescNe : contact.shortDesc}
                   </Text>
                   {contact.phone ? (
                     <TouchableOpacity
@@ -135,7 +137,7 @@ export default function ContactsScreen({ isEmbedded }: { isEmbedded?: boolean })
                       activeOpacity={0.7}
                     >
                       <Text className="text-[12px] mr-1">📞</Text>
-                      <Text className="text-[12px] font-semibold text-blueText">Call {contact.phone}</Text>
+                      <Text className="text-[12px] font-semibold text-blueText">{t('phase1.call')} {contact.phone}</Text>
                     </TouchableOpacity>
                   ) : null}
                 </View>
@@ -149,7 +151,7 @@ export default function ContactsScreen({ isEmbedded }: { isEmbedded?: boolean })
               {isExpanded && (
                 <View className="bg-themePrimaryLight px-3.5 py-3 border-t-[0.5px] border-t-themeBorder">
                   <Text className="text-[14px] text-textSecondary leading-[21px]">
-                    {contact.fullDetail}x2
+                    {i18n.language === 'ne' ? contact.fullDetailNe : contact.fullDetail}
                   </Text>
                 </View>
               )}

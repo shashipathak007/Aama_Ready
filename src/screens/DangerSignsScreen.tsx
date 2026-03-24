@@ -8,6 +8,7 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { DANGER_SIGNS, TIER_CONFIG, DangerTier } from '../data/dangerSigns';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -17,6 +18,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 const TIERS: DangerTier[] = ['go_now', 'call_doctor', 'wait_home'];
 
 export default function DangerSignsScreen({ isEmbedded }: { isEmbedded?: boolean }) {
+  const { t, i18n } = useTranslation();
   const [activeTier, setActiveTier] = useState<DangerTier>('go_now');
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const scrollRef = useRef<ScrollView>(null);
@@ -44,15 +46,15 @@ export default function DangerSignsScreen({ isEmbedded }: { isEmbedded?: boolean
       <View className="bg-themeWhite pt-2 pb-[14px] border-b-[0.5px] border-themeBorder px-4">
         {!isEmbedded && (
           <>
-            <Text className="text-[22px] font-bold text-textPrimary tracking-[-0.3px] mb-1 mt-12">Danger Signs</Text>
+            <Text className="text-[22px] font-bold text-textPrimary tracking-[-0.3px] mb-1 mt-12">{t('phase1.danger_signs_title')}</Text>
             <Text className="text-[12px] text-textMuted mb-[14px]">
-              Know when to act — every minute matters
+              {t('phase1.danger_signs_desc')}
             </Text>
           </>
         )}
         {isEmbedded && (
           <Text className="text-[12px] text-textMuted mb-[14px] mt-2">
-            Know when to act — every minute matters
+            {t('phase1.danger_signs_desc')}
           </Text>
         )}
         <View className="flex-row gap-2">
@@ -80,7 +82,7 @@ export default function DangerSignsScreen({ isEmbedded }: { isEmbedded?: boolean
                   className={`text-[12px] ${isActive ? 'font-bold' : 'font-semibold'}`}
                   style={{ color: isActive ? tc.text : '#A69B9D' }}
                 >
-                  {tc.label}
+                  {i18n.language === 'ne' ? tc.labelNe : tc.label}
                 </Text>
               </TouchableOpacity>
             );
@@ -102,10 +104,10 @@ export default function DangerSignsScreen({ isEmbedded }: { isEmbedded?: boolean
             {activeTier === 'go_now' && '🚨 '}
             {activeTier === 'call_doctor' && '📞 '}
             {activeTier === 'wait_home' && '🏠 '}
-            {config.label}
+            {i18n.language === 'ne' ? config.labelNe : config.label}
           </Text>
           <Text className="text-[12px] font-medium" style={{ color: config.text }}>
-            {tierSigns.length} signs
+            {tierSigns.length} {t('phase1.signs')}
           </Text>
         </View>
 
@@ -121,13 +123,13 @@ export default function DangerSignsScreen({ isEmbedded }: { isEmbedded?: boolean
             >
               <View className="flex-row items-start p-3.5">
                 <View className="w-2 h-2 rounded-full mt-[5px] mr-2.5" style={{ backgroundColor: config.border }} />
-                <Text className="text-[14px] font-semibold text-textPrimary flex-1 leading-5">{sign.title}</Text>
+                <Text className="text-[14px] font-semibold text-textPrimary flex-1 leading-5">{i18n.language === 'ne' ? sign.titleNe : sign.title}</Text>
                 <Text className="text-[14px] text-textMuted ml-2 mt-[2px]">{isExpanded ? '▲' : '▼'}</Text>
               </View>
               {isExpanded && (
                 <View className="px-3.5 py-3 border-t-[0.5px] border-t-themeBorder" style={{ backgroundColor: config.bg }}>
                   <Text className="text-[14px] leading-[21px]" style={{ color: config.text }}>
-                    {sign.explanation}
+                    {i18n.language === 'ne' ? sign.explanationNe : sign.explanation}
                   </Text>
                 </View>
               )}

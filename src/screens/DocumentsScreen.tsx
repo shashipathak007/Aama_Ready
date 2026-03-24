@@ -9,6 +9,7 @@ import {
   UIManager,
   Alert,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { DOCUMENTS, DOC_CATEGORY_COLORS, DocCategory } from '../data/documents';
 import { Checkbox, ResetButton } from '../components/SharedComponents';
 import { useChecklist } from '../hooks/useChecklist';
@@ -20,6 +21,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 const CATEGORIES: DocCategory[] = ['Identity', 'Aama Programme', 'Medical', 'Payment'];
 
 export default function DocumentsScreen({ isEmbedded }: { isEmbedded?: boolean }) {
+  const { t, i18n } = useTranslation();
   const [checked, toggle, resetAll] = useChecklist('docs_checked');
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
@@ -55,7 +57,7 @@ export default function DocumentsScreen({ isEmbedded }: { isEmbedded?: boolean }
       <View className="bg-themeWhite pt-2 pb-[14px] border-b-[0.5px] border-themeBorder px-4">
         {!isEmbedded && (
           <View className="flex-row justify-between items-center mb-2 mt-12">
-            <Text className="text-[22px] font-bold text-textPrimary tracking-[-0.3px]">Documents</Text>
+            <Text className="text-[22px] font-bold text-textPrimary tracking-[-0.3px]">{t('phase1.documents_title')}</Text>
             <ResetButton onPress={handleReset} />
           </View>
         )}
@@ -66,7 +68,7 @@ export default function DocumentsScreen({ isEmbedded }: { isEmbedded?: boolean }
         )}
         <View className="flex-row justify-between items-center mb-1.5">
           <Text className="text-[12px] text-textSecondary font-medium">
-            {checkedCount} of {totalDocs} documents ready
+            {checkedCount} / {totalDocs} {t('phase1.documents_ready')}
           </Text>
           <Text className="text-[12px] text-themePrimary font-bold">{pct}%</Text>
         </View>
@@ -75,7 +77,7 @@ export default function DocumentsScreen({ isEmbedded }: { isEmbedded?: boolean }
         </View>
         {checkedCount === totalDocs && totalDocs > 0 && (
           <View className="mt-3 bg-greenBg border-[1px] border-greenBorder py-3 px-4 rounded-xl items-center">
-            <Text className="text-[14px] text-greenText font-bold">✓ All documents ready!</Text>
+            <Text className="text-[14px] text-greenText font-bold">{t('phase1.all_docs_ready')}</Text>
           </View>
         )}
       </View>
@@ -93,7 +95,7 @@ export default function DocumentsScreen({ isEmbedded }: { isEmbedded?: boolean }
             <View key={cat}>
               <View className="flex-row items-center bg-themeBg px-4 py-3 border-b-[0.5px] border-themeBorder">
                 <View className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: colors.text }} />
-                <Text className="text-[16px] font-bold text-textPrimary flex-1">{cat}</Text>
+                <Text className="text-[16px] font-bold text-textPrimary flex-1">{i18n.language === 'ne' ? colors.nameNe : cat}</Text>
                 <Text className="text-[12px] text-textMuted font-medium">
                   {items.filter((i) => checked.has(i.id)).length}/{items.length}
                 </Text>
@@ -120,7 +122,7 @@ export default function DocumentsScreen({ isEmbedded }: { isEmbedded?: boolean }
                             isChecked ? 'text-textMuted' : 'text-textPrimary'
                           }`}
                         >
-                          {doc.name}
+                          {i18n.language === 'ne' ? doc.nameNe : doc.name}
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => toggleExpand(doc.id)} className="p-2 ml-1">
@@ -129,8 +131,8 @@ export default function DocumentsScreen({ isEmbedded }: { isEmbedded?: boolean }
                     </View>
                     {isExpanded && (
                       <View className="bg-[#EAF3FA] px-3.5 py-3 border-t-[0.5px] border-t-themeBorder">
-                        <Text className="text-[12px] font-bold text-blueText mb-1 uppercase tracking-[0.5px]">Why needed?</Text>
-                        <Text className="text-[14px] text-textSecondary leading-[21px]">{doc.whyNeeded}</Text>
+                        <Text className="text-[12px] font-bold text-blueText mb-1 uppercase tracking-[0.5px]">{t('phase1.why_needed')}</Text>
+                        <Text className="text-[14px] text-textSecondary leading-[21px]">{i18n.language === 'ne' ? doc.whyNeededNe : doc.whyNeeded}</Text>
                       </View>
                     )}
                   </View>

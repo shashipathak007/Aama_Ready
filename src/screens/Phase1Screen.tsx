@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, LayoutAnimation } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import HospitalBagScreen from './HospitalBagScreen';
 import DocumentsScreen from './DocumentsScreen';
 import DangerSignsScreen from './DangerSignsScreen';
 import ContactsScreen from './ContactsScreen';
 
-const TABS = ['Hospital Bag', 'Documents', 'Danger Signs', 'Contacts'];
-
 export default function Phase1Screen() {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState(0);
+
+  const TABS = t('phase1.tabs', { returnObjects: true }) as string[];
 
   const renderContent = () => {
     switch (activeTab) {
@@ -28,8 +30,8 @@ export default function Phase1Screen() {
         <TouchableOpacity onPress={() => navigation.goBack()} className="mb-3 w-10 h-10 -ml-2 items-center justify-center">
           <Text className="text-[28px] text-textPrimary leading-8">←</Text>
         </TouchableOpacity>
-        <Text className="text-[24px] font-bold text-textPrimary tracking-[-0.5px] mb-1">Preparation Phase</Text>
-        <Text className="text-[12px] text-textSecondary leading-5">Everything you need ready before labour begins.</Text>
+        <Text className="text-[24px] font-bold text-textPrimary tracking-[-0.5px] mb-1">{t('phase1.title')}</Text>
+        <Text className="text-[12px] text-textSecondary leading-5">{t('phase1.desc')}</Text>
       </View>
       
       <View className="px-1 py-1 bg-themeWhite border-b-[0.5px] border-themeBorder">

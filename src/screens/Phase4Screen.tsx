@@ -5,12 +5,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PHASE4_ITEMS_MOTHER, PHASE4_ITEMS_NEWBORN, PHASE4_ITEMS_FEEDING, PHASE4_ITEMS_TOOLS, PHASE4_ROUTINE, PHASE4_HYGIENE, PHASE4_WARNING_BABY, PHASE4_WARNING_MOTHER } from '../data/phase4';
 import { PhaseReminderBanner, Checkbox, InfoCard } from '../components/SharedComponents';
 import { useChecklist } from '../hooks/useChecklist';
-
-const TABS = ['New Items', 'Routine', 'Hygiene', 'Warnings', 'Tracker'];
+import { useTranslation } from 'react-i18next';
 
 export default function Phase4Screen() {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState(0);
+
+  const TABS = t('phase4.tabs', { returnObjects: true }) as string[];
 
   const renderContent = () => {
     switch (activeTab) {
@@ -29,8 +31,8 @@ export default function Phase4Screen() {
         <TouchableOpacity onPress={() => navigation.goBack()} className="mb-3 w-10 h-10 -ml-2 items-center justify-center">
           <Text className="text-[28px] text-textPrimary leading-8">←</Text>
         </TouchableOpacity>
-        <Text className="text-[24px] font-bold text-textPrimary tracking-[-0.5px] mb-1">Home Care</Text>
-        <Text className="text-[12px] text-textSecondary leading-5">20 new items to have ready at home before you arrive.</Text>
+        <Text className="text-[24px] font-bold text-textPrimary tracking-[-0.5px] mb-1">{t('phase4.title')}</Text>
+        <Text className="text-[12px] text-textSecondary leading-5">{t('phase4.desc')}</Text>
       </View>
       <PhaseReminderBanner />
       
@@ -64,6 +66,7 @@ export default function Phase4Screen() {
 // SUB-SECTION 1: NEW ITEMS
 // -------------------------------------------------------------
 const NewItemsTab = () => {
+  const { i18n } = useTranslation();
   const [checked, toggle] = useChecklist('p4_checked');
 
   const renderSection = (title: string, data: any[]) => (
@@ -74,8 +77,8 @@ const NewItemsTab = () => {
       return (
         <InfoCard
           key={item.id}
-          title={item.name}
-          detail={item.why}
+          title={i18n.language === 'ne' ? item.nameNe : item.name}
+          detail={i18n.language === 'ne' ? item.whyNe : item.why}
           checked={isChecked}
           onCheck={() => toggle(item.id)}
           borderColor="#C97B20"
@@ -99,12 +102,13 @@ const NewItemsTab = () => {
 // SUB-SECTION 2: MOTHER ROUTINE
 // -------------------------------------------------------------
 const RoutineTab = () => {
+  const { i18n } = useTranslation();
   return (
     <ScrollView className="flex-1 pt-4" contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
       {PHASE4_ROUTINE.map((stage, idx) => (
         <View key={idx} className="bg-themeWhite mx-4 mb-4 border-[0.5px] border-themeBorder rounded-xl p-5 shadow-sm border-l-[4px] border-l-[#F48B9E]">
-          <Text className="text-[16px] font-bold text-themePrimary mb-3">{stage.stage}</Text>
-          {stage.points.map((pt, i) => (
+          <Text className="text-[16px] font-bold text-themePrimary mb-3">{i18n.language === 'ne' ? stage.stageNe : stage.stage}</Text>
+          {(i18n.language === 'ne' ? stage.pointsNe : stage.points).map((pt, i) => (
             <View key={i} className="flex-row items-start mb-2.5">
               <Text className="text-[16px] text-themePrimary mr-2 leading-6">•</Text>
               <Text className="text-[14px] text-textSecondary leading-[22px] flex-1">{pt}</Text>
@@ -120,10 +124,11 @@ const RoutineTab = () => {
 // SUB-SECTION 3: HYGIENE
 // -------------------------------------------------------------
 const HygieneTab = () => {
+  const { i18n } = useTranslation();
   return (
     <ScrollView className="flex-1 pt-4" contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
       {PHASE4_HYGIENE.map((item, idx) => (
-        <InfoCard key={idx} title={item.title} detail={item.detail} borderColor="#1C6B9E" bgColor="#EAF3FA" />
+        <InfoCard key={idx} title={i18n.language === 'ne' ? item.titleNe : item.title} detail={i18n.language === 'ne' ? item.detailNe : item.detail} borderColor="#1C6B9E" bgColor="#EAF3FA" />
       ))}
     </ScrollView>
   );
@@ -133,16 +138,17 @@ const HygieneTab = () => {
 // SUB-SECTION 4: WARNING SIGNS
 // -------------------------------------------------------------
 const WarningsTab = () => {
+  const { t, i18n } = useTranslation();
   return (
     <ScrollView className="flex-1 pt-4" contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
-      <Text className="text-[14px] font-bold text-textSecondary uppercase tracking-[1px] px-4 mb-2 mt-2">Baby Warning Signs</Text>
+      <Text className="text-[14px] font-bold text-textSecondary uppercase tracking-[1px] px-4 mb-2 mt-2">{t('phase4.baby_warning')}</Text>
       {PHASE4_WARNING_BABY.map((item, idx) => (
-        <InfoCard key={idx} title={item.title} detail={item.detail} borderColor="#DE8E94" bgColor="#FCEDED" prefix="!" />
+        <InfoCard key={idx} title={i18n.language === 'ne' ? item.titleNe : item.title} detail={i18n.language === 'ne' ? item.detailNe : item.detail} borderColor="#DE8E94" bgColor="#FCEDED" prefix="!" />
       ))}
       <View className="h-6" />
-      <Text className="text-[14px] font-bold text-textSecondary uppercase tracking-[1px] px-4 mb-2">Mother Warning Signs</Text>
+      <Text className="text-[14px] font-bold text-textSecondary uppercase tracking-[1px] px-4 mb-2">{t('phase4.mother_warning')}</Text>
       {PHASE4_WARNING_MOTHER.map((item, idx) => (
-        <InfoCard key={idx} title={item.title} detail={item.detail} borderColor="#DE8E94" bgColor="#FCEDED" prefix="!" />
+        <InfoCard key={idx} title={i18n.language === 'ne' ? item.titleNe : item.title} detail={i18n.language === 'ne' ? item.detailNe : item.detail} borderColor="#DE8E94" bgColor="#FCEDED" prefix="!" />
       ))}
     </ScrollView>
   );
@@ -156,6 +162,7 @@ interface FeedLog { id: string; time: number; type: FeedType; duration: number }
 interface SleepLog { id: string; start: number; end: number | null; type: 'baby'|'mother' }
 
 const TrackerTab = () => {
+  const { t } = useTranslation();
   const [feeds, setFeeds] = useState<FeedLog[]>([]);
   const [sleeps, setSleeps] = useState<SleepLog[]>([]);
   
@@ -214,58 +221,58 @@ const TrackerTab = () => {
   return (
     <ScrollView className="flex-1 pt-4 pb-20 px-4" showsVerticalScrollIndicator={false}>
       <View className="flex-row justify-between mb-2">
-        <Text className="text-[18px] font-bold text-textPrimary tracking-[-0.2px]">Feeding Log</Text>
-        <TouchableOpacity onPress={resetData}><Text className="text-[12px] font-bold text-textMuted uppercase mt-1">Reset</Text></TouchableOpacity>
+        <Text className="text-[18px] font-bold text-textPrimary tracking-[-0.2px]">{t('phase4.feeding_log')}</Text>
+        <TouchableOpacity onPress={resetData}><Text className="text-[12px] font-bold text-textMuted uppercase mt-1">{t('phase4.reset')}</Text></TouchableOpacity>
       </View>
       
       {feedMenu ? (
         <View className="bg-themeWhite border-[0.5px] border-themeBorder rounded-xl p-4 mb-4 shadow-sm items-center">
-          <Text className="text-[14px] font-bold text-textSecondary uppercase mb-3">Duration (mins)</Text>
+          <Text className="text-[14px] font-bold text-textSecondary uppercase mb-3">{t('phase4.duration_mins')}</Text>
           <View className="flex-row items-center mb-5">
             <TouchableOpacity onPress={() => setFeedDur(Math.max(1, feedDur-1))} className="w-10 h-10 bg-themeBg rounded-lg items-center justify-center"><Text className="text-[20px] font-bold">-</Text></TouchableOpacity>
             <Text className="text-[24px] font-extrabold w-16 text-center text-[#F48B9E]">{feedDur}</Text>
             <TouchableOpacity onPress={() => setFeedDur(feedDur+1)} className="w-10 h-10 bg-themeBg rounded-lg items-center justify-center"><Text className="text-[20px] font-bold">+</Text></TouchableOpacity>
           </View>
           <View className="flex-row gap-2 w-full">
-            <TouchableOpacity onPress={() => addFeed('Left breast')} className="flex-1 bg-[#EAF3FA] py-3 rounded-lg border-[0.5px] border-[#1C6B9E]"><Text className="text-center text-[#1C6B9E] font-bold text-[12px]">Left</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => addFeed('Right breast')} className="flex-1 bg-[#EAF3FA] py-3 rounded-lg border-[0.5px] border-[#1C6B9E]"><Text className="text-center text-[#1C6B9E] font-bold text-[12px]">Right</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => addFeed('Bottle')} className="flex-1 bg-themeBg py-3 rounded-lg border-[0.5px] border-themeBorder"><Text className="text-center text-textSecondary font-bold text-[12px]">Bottle</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => addFeed('Left breast')} className="flex-1 bg-[#EAF3FA] py-3 rounded-lg border-[0.5px] border-[#1C6B9E]"><Text className="text-center text-[#1C6B9E] font-bold text-[12px]">{t('phase4.left')}</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => addFeed('Right breast')} className="flex-1 bg-[#EAF3FA] py-3 rounded-lg border-[0.5px] border-[#1C6B9E]"><Text className="text-center text-[#1C6B9E] font-bold text-[12px]">{t('phase4.right')}</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => addFeed('Bottle')} className="flex-1 bg-themeBg py-3 rounded-lg border-[0.5px] border-themeBorder"><Text className="text-center text-textSecondary font-bold text-[12px]">{t('phase4.bottle')}</Text></TouchableOpacity>
           </View>
         </View>
       ) : (
         <TouchableOpacity onPress={() => { LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); setFeedMenu(true); }} className="bg-[#F48B9E] py-4 rounded-xl items-center mb-4 shadow-sm">
-          <Text className="text-[16px] font-bold text-themeWhite">➕ Log a feed</Text>
+          <Text className="text-[16px] font-bold text-themeWhite">{t('phase4.log_feed')}</Text>
         </TouchableOpacity>
       )}
 
       {lastFeed && !feedMenu && (
         <View className="mb-6 bg-themeWhite border-[0.5px] border-themeBorder rounded-xl p-3 shadow-sm border-l-[3px] border-l-[#F48B9E]">
-           <Text className="text-[13px] text-textSecondary font-medium">Last feed: <Text className="font-bold text-themePrimary">{timeSinceFeed && timeSinceFeed > 60 ? `${Math.floor(timeSinceFeed/60)}h ${timeSinceFeed%60}m` : `${timeSinceFeed} mins`} ago</Text> ({lastFeed.type})</Text>
+           <Text className="text-[13px] text-textSecondary font-medium">{t('phase4.last_feed')} <Text className="font-bold text-themePrimary">{timeSinceFeed && timeSinceFeed > 60 ? `${Math.floor(timeSinceFeed/60)}h ${timeSinceFeed%60}m` : `${timeSinceFeed} ${t('phase4.mins')}`} {t('phase4.ago')}</Text> ({lastFeed.type === 'Bottle' ? t('phase4.bottle') : lastFeed.type === 'Left breast' ? t('phase4.left') : t('phase4.right')})</Text>
         </View>
       )}
 
       {feeds.slice(0, 5).map(f => (
         <View key={f.id} className="flex-row justify-between mb-2 pb-2 border-b-[0.5px] border-[#F2EBEC] px-1">
           <Text className="text-[13px] text-textSecondary">{new Date(f.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Text>
-          <Text className="text-[13px] font-semibold text-textPrimary">{f.type}</Text>
-          <Text className="text-[13px] text-themePrimary font-bold">{f.duration} min</Text>
+          <Text className="text-[13px] font-semibold text-textPrimary">{f.type === 'Bottle' ? t('phase4.bottle') : f.type === 'Left breast' ? t('phase4.left') : t('phase4.right')}</Text>
+          <Text className="text-[13px] text-themePrimary font-bold">{f.duration} {t('phase4.min')}</Text>
         </View>
       ))}
 
       <View className="h-[0.5px] bg-[#EAE2E3] my-6" />
 
       {/* SLEEP TRACKER */}
-      <Text className="text-[18px] font-bold text-textPrimary tracking-[-0.2px] mb-4">Sleep Log</Text>
+      <Text className="text-[18px] font-bold text-textPrimary tracking-[-0.2px] mb-4">{t('phase4.sleep_log')}</Text>
       
       <View className="flex-row gap-4 mb-4">
         <TouchableOpacity onPress={() => toggleSleep('baby')} className={`flex-1 py-4 rounded-xl border-[1.5px] items-center ${activeBabySleep ? 'bg-[#FFF5F0] border-[#F77F6E]' : 'bg-themeWhite border-[#EAE2E3]'} shadow-sm`}>
-          <Text className={`text-[15px] font-bold mb-1 ${activeBabySleep ? 'text-[#F77F6E]' : 'text-textPrimary'}`}>{activeBabySleep ? 'Baby Sleeping' : 'Baby Awake'}</Text>
-          <Text className="text-[11px] text-textSecondary">{activeBabySleep ? 'Tap to wake' : 'Tap to sleep'}</Text>
+          <Text className={`text-[15px] font-bold mb-1 ${activeBabySleep ? 'text-[#F77F6E]' : 'text-textPrimary'}`}>{activeBabySleep ? t('phase4.baby_sleeping') : t('phase4.baby_awake')}</Text>
+          <Text className="text-[11px] text-textSecondary">{activeBabySleep ? t('phase4.tap_to_wake') : t('phase4.tap_to_sleep')}</Text>
         </TouchableOpacity>
         
         <TouchableOpacity onPress={() => toggleSleep('mother')} className={`flex-1 py-4 rounded-xl border-[1.5px] items-center ${activeMotherSleep ? 'bg-[#EAF3FA] border-[#1C6B9E]' : 'bg-themeWhite border-[#EAE2E3]'} shadow-sm`}>
-          <Text className={`text-[15px] font-bold mb-1 ${activeMotherSleep ? 'text-[#1C6B9E]' : 'text-textPrimary'}`}>{activeMotherSleep ? 'Mother Sleeping' : 'Mother Awake'}</Text>
-          <Text className="text-[11px] text-textSecondary">{activeMotherSleep ? 'Tap to wake' : 'Tap to sleep'}</Text>
+          <Text className={`text-[15px] font-bold mb-1 ${activeMotherSleep ? 'text-[#1C6B9E]' : 'text-textPrimary'}`}>{activeMotherSleep ? t('phase4.mother_sleeping') : t('phase4.mother_awake')}</Text>
+          <Text className="text-[11px] text-textSecondary">{activeMotherSleep ? t('phase4.tap_to_wake') : t('phase4.tap_to_sleep')}</Text>
         </TouchableOpacity>
       </View>
 
