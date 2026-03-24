@@ -79,7 +79,7 @@ export const ProgressHeader: React.FC<ProgressHeaderProps> = ({
       </View>
       {pct === 100 && total > 0 && (
         <View className="mt-3 bg-greenBg border-[1px] border-greenBorder py-3 px-4 rounded-xl items-center flex-row justify-center">
-          <Text className="text-greenText text-[14px] font-bold">✓  All done! You are ready.</Text>
+          <Text className="text-greenText text-[14px] font-bold">All done! You are ready.</Text>
         </View>
       )}
     </View>
@@ -173,7 +173,7 @@ export const PhaseReminderBanner: React.FC = () => {
   return (
     <View style={{ backgroundColor: '#FCEEF1', borderBottomWidth: 1, borderBottomColor: '#E8637B', paddingHorizontal: 16, paddingVertical: 10 }}>
       <Text style={{ fontSize: 12, color: '#B8364C', fontWeight: '700', lineHeight: 18, textAlign: 'center' }}>
-        💡 Everything from your Phase 1 hospital bag carries forward. Only new items are listed here.
+         Everything from your Phase 1 hospital bag carries forward.
       </Text>
     </View>
   );

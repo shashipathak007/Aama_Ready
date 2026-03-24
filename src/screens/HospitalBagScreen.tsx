@@ -116,7 +116,7 @@ export default function HospitalBagScreen({ isEmbedded }: { isEmbedded?: boolean
         showsVerticalScrollIndicator={false}
       >
         <View className="items-center py-5 px-4">
-          <Text className="text-[36px] mb-2">🚫</Text>
+          <Text className="text-[36px] mb-2"></Text>
           <Text className="text-[18px] font-bold text-redText mb-1">{t('phase1.bag.items_to_avoid')}</Text>
           <Text className="text-[12px] text-textMuted text-center">
             {t('phase1.bag.do_not_pack_desc')}
